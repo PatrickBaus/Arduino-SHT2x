@@ -1,0 +1,33 @@
+# Syntax Coloring Map For ExampleLibrary
+
+# Datatypes (KEYWORD1)
+SHT2x                   KEYWORD1
+HTU2x                   KEYWORD1
+Si702x                  KEYWORD1
+Resolution              KEYWORD1
+SerialNumber            KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+setHeaterState          KEYWORD2
+getHeaterState          KEYWORD2
+reset                   KEYWORD2
+readTemp                KEYWORD2
+readTempRaw             KEYWORD2
+fetchTemp               KEYWORD2
+fetchTempRaw            KEYWORD2
+readHumidity            KEYWORD2
+readHumidityRaw         KEYWORD2
+readSerial              KEYWORD2
+readFirmwareVersion     KEYWORD2
+setOtpReloadStatus      KEYWORD2
+getOtpReloadStatus      KEYWORD2
+getVddLowStatus         KEYWORD2
+setResolution           KEYWORD2
+convertResTemperature   KEYWORD2
+convertResHumidity      KEYWORD2
+getHeaterPower          KEYWORD2
+setHeaterPower          KEYWORD2
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)
