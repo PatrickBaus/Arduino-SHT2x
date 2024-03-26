@@ -17,7 +17,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#if defined(__arm__) && defined(TEENSYDUINO)
+// Match Teensy 3.6 (__MK66FX1M0__), Teensy 3.5 (__MK64FX512__), Teensy 3.2/3.1 (__MK20DX256__), Teensy 3.0 (__MK20DX128__), Teensy LC(__MKL26Z64__)
+#if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
   #include <i2c_t3.h>
 #else
   #include <Wire.h>
@@ -38,7 +39,7 @@ struct SerialNumber {
 
 class SHT2x {
   public:
-    #if defined(__arm__) && defined(TEENSYDUINO)
+    #if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
     SHT2x(i2c_t3& i2cBus);
     #else
     SHT2x(TwoWire& i2cBus);
@@ -59,7 +60,7 @@ class SHT2x {
     static uint8_t convertResTemperature(Resolution resolution);
     static uint8_t convertResHumidity(Resolution resolution);
   private:
-    #if defined(__arm__) && defined(TEENSYDUINO)
+    #if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
     i2c_t3* _pI2cBus = NULL;
     #else
     TwoWire* _pI2cBus = NULL;
@@ -99,7 +100,7 @@ protected:
 
 class HTU2x: public SHT2x {
   public:
-    #if defined(__arm__) && defined(TEENSYDUINO)
+    #if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
     HTU2x(i2c_t3& i2cBus);
     #else
     HTU2x(TwoWire& i2cBus);
@@ -110,7 +111,7 @@ class HTU2x: public SHT2x {
 
 class Si702x: public SHT2x {
   public:
-    #if defined(__arm__) && defined(TEENSYDUINO)
+    #if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
     Si702x(i2c_t3& i2cBus);
     #else
     Si702x(TwoWire& i2cBus);

@@ -13,7 +13,7 @@
  */
 #include "SHT2x.h"
 
-#if defined(__arm__) && defined(TEENSYDUINO)
+#if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
 SHT2x::SHT2x(i2c_t3& i2cBus) : _pI2cBus(&i2cBus) {};
 #else
 SHT2x::SHT2x(TwoWire& i2cBus) : _pI2cBus(&i2cBus) {};
@@ -270,7 +270,7 @@ uint8_t SHT2x::convertResHumidity(Resolution resolution) {
 }
 
 
-#if defined(__arm__) && defined(TEENSYDUINO)
+#if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
 HTU2x::HTU2x(i2c_t3& i2cBus) : SHT2x(i2cBus) {};
 #else
 HTU2x::HTU2x(TwoWire& i2cBus) : SHT2x(i2cBus) {};
@@ -299,7 +299,7 @@ bool HTU2x::readTempRaw(uint16_t &value, const bool holdMaster) {
 }
 
 
-#if defined(__arm__) && defined(TEENSYDUINO)
+#if defined(__arm__) && defined(TEENSYDUINO) && (defined(__MK66FX1M0__) || defined(__MK64FX512__) || defined(__MK20DX256__) || defined(__MK20DX128__) || defined(__MKL26Z64__))
 Si702x::Si702x(i2c_t3& i2cBus) : SHT2x(i2cBus) {};
 #else
 Si702x::Si702x(TwoWire& i2cBus) : SHT2x(i2cBus) {};
