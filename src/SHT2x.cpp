@@ -196,7 +196,10 @@ bool SHT2x::writeUserRegister(uint8_t userRegister) {
 
 void SHT2x::setHeaterState(const bool enabled) {
   uint8_t userReg;
-  this->readUserRegister(userReg);
+  // Never write the register without knowing the state of the reserved bits
+  if (!this->readUserRegister(userReg)) {
+    return;
+  }
   userReg = (userReg & ~SHT2x::STATUS_HEATER) | enabled * SHT2x::STATUS_HEATER;
   this->writeUserRegister(userReg);
 }
@@ -209,7 +212,10 @@ bool SHT2x::getHeaterState(void) {
 
 void SHT2x::setOtpReloadStatus(const bool enabled) {
   uint8_t userReg;
-  this->readUserRegister(userReg);
+  // Never write the register without knowing the state of the reserved bits
+  if (!this->readUserRegister(userReg)) {
+    return;
+  }
   userReg = (userReg & ~SHT2x::STATUS_OTP_RELOAD) | !enabled * SHT2x::STATUS_OTP_RELOAD;
   this->writeUserRegister(userReg);
 }
@@ -228,7 +234,10 @@ bool SHT2x::getVddLowStatus(void) {
 
 void SHT2x::setResolution(const Resolution resolution) {
   uint8_t userReg = resolution;
-  this->readUserRegister(userReg);
+  // Never write the register without knowing the state of the reserved bits
+  if (!this->readUserRegister(userReg)) {
+    return;
+  }
   userReg = (userReg & ~RH11_T11) | resolution;
   this->writeUserRegister(userReg);
 }
@@ -385,7 +394,10 @@ uint8_t Si702x::getHeaterPower(void) {
 
 void Si702x::setHeaterPower(uint8_t value) {
   uint8_t heaterRegister;
-  this->readHeaterControlRegister(heaterRegister);
+  // Never write the register without knowing the state of the reserved bits
+  if (!this->readHeaterControlRegister(heaterRegister)) {
+    return;
+  }
   heaterRegister &= 0xF0;
   value = value > 0b1111 ? 0b1111 : value;
   this->writeHeaterControlRegister(heaterRegister | value);
