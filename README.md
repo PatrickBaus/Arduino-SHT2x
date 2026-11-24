@@ -1,6 +1,8 @@
 Sensirion SHT2x Arduino Library
 ===================
 
+[![CI](https://github.com/PatrickBaus/Arduino-SHT2x/actions/workflows/ci.yml/badge.svg)](https://github.com/PatrickBaus/Arduino-SHT2x/actions/workflows/ci.yml)
+
 Note: These devices are all NRD except for the TE parts.
 
 This repository contains an Arduino library for the following Sensirion devices:
@@ -50,3 +52,17 @@ Currently the library does not support the Arduino library manager, so it is hig
 src/
 ```
 within your Arduino project.
+
+Tests
+-----
+The library is tested on the host (no hardware required) against a fake of the Arduino `Wire` API, which records the bus traffic and
+plays back scripted sensor responses. The tests live in [test/](test/), the fakes in [test/mocks/](test/mocks/). They use
+[doctest](https://github.com/doctest/doctest), which is downloaded by CMake. To build and run them you need CMake (>= 3.14), a C++11
+compiler (GCC) and, for the coverage report, [gcovr](https://gcovr.com/):
+```
+cmake -S test -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+gcovr --root . --filter src/ --exclude-throw-branches --exclude-unreachable-branches --fail-under-line 100 --fail-under-branch 100 build
+```
+The last command prints the line coverage of `src/` and fails if the line or branch coverage drops below 100 %.

@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Host test build and coverage output
+build/
+test/build/
+*.gcda
+*.gcno
+*.gcov
+coverage/
+coverage.xml
