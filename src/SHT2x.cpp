@@ -98,18 +98,19 @@ bool SHT2x::queryCommand(const uint16_t command, uint8_t* result, const size_t l
 bool SHT2x::readSerial(SerialNumber& serial) {
   uint8_t data[8] = {0};
   // Read the first register
-  this->queryCommand(SHT2x::CMD_READ_SERIAL_1, data, sizeof(data));
+  bool result = this->queryCommand(SHT2x::CMD_READ_SERIAL_1, data, sizeof(data));
   serial.b = data[0] << 24 | data[2] << 16 | data[4] << 8 | data[6] << 0;
   // Test CRC
-  bool result =
-       SHT2x::crc8(&(data[0]), 1) == data[1]
+  result =
+       result
+    && SHT2x::crc8(&(data[0]), 1) == data[1]
     && SHT2x::crc8(&(data[2]), 1) == data[3]
     && SHT2x::crc8(&(data[4]), 1) == data[5]
     && SHT2x::crc8(&(data[6]), 1) == data[7]
   ;
 
   // Read the second register (only 6 bytes)
-  this->queryCommand(SHT2x::CMD_READ_SERIAL_2, data, 6);
+  result = this->queryCommand(SHT2x::CMD_READ_SERIAL_2, data, 6) && result;
   serial.c = data[0] << 8 | data[1] << 0;
   serial.b = data[3] << 8 | data[4] << 0;
   // Test CRC
@@ -144,13 +145,14 @@ uint16_t SHT2x::readTempRaw(const bool holdMaster) {
 
 bool SHT2x::readTempRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 85 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 85 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 85 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 85 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 float SHT2x::readHumidity(const bool holdMaster) {
@@ -170,13 +172,14 @@ uint16_t SHT2x::readHumidityRaw(const bool holdMaster) {
 
 bool SHT2x::readHumidityRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 29+85 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 29+85 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 29+85 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 29+85 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 bool SHT2x::readUserRegister(uint8_t& userRegister) {
@@ -278,24 +281,26 @@ HTU2x::HTU2x(TwoWire& i2cBus) : SHT2x(i2cBus) {};
 
 bool HTU2x::readHumidityRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 16+50 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 16+50 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 16+50 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 16+50 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 bool HTU2x::readTempRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 50 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 50 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 50 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 50 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 
@@ -319,24 +324,26 @@ uint8_t Si702x::readFirmwareVersion(void) {
 
 bool Si702x::readHumidityRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 12+11 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY_HOLD_MASTER, data, sizeof(data), 12+11 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 12+11 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_HUMIDITY, data, sizeof(data), 12+11 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 bool Si702x::readTempRaw(uint16_t &value, const bool holdMaster) {
   uint8_t data[3] = {0};
+  bool result;
   if (holdMaster) {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 11 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE_HOLD_MASTER, data, sizeof(data), 11 /*ms*/);
   } else {
-    this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 11 /*ms*/);
+    result = this->queryCommand(SHT2x::CMD_MEASURE_TEMPERATURE, data, sizeof(data), 11 /*ms*/);
   }
   value = data[0] << 8 | data[1] << 0;
-  return SHT2x::crc8(data, 2) == data[2];
+  return result && SHT2x::crc8(data, 2) == data[2];
 }
 
 float Si702x::fetchTemp(void) {
