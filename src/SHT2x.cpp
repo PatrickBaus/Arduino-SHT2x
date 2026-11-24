@@ -39,11 +39,11 @@ uint8_t SHT2x::crc8(const uint8_t* data, const size_t len) {
 }
 
 float SHT2x::convertToCelsius(const uint16_t value) {
-  return ((float)value * 175.72) / 65535.0f - 46.85f;
+  return ((float)value * 175.72) / 65536.0f - 46.85f;
 }
 
 float SHT2x::convertToRh(const uint16_t value) {
-  return ((float)value * 125) / 65535.0f - 6.f;
+  return ((float)value * 125) / 65536.0f - 6.f;
 }
 
 bool SHT2x::writeCommand(const uint8_t* cmd, const size_t cmdLen, uint8_t* data, const size_t len) {
