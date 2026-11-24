@@ -90,6 +90,8 @@ protected:
     static const uint8_t CMD_MEASURE_TEMPERATURE_HOLD_MASTER = 0xE3;
     static const uint8_t CMD_MEASURE_HUMIDITY = 0xF5;
     static const uint8_t CMD_MEASURE_HUMIDITY_HOLD_MASTER = 0xE5;
+    // The two LSBs of a measurement are status bits, which are not part of the signal
+    static const uint16_t MEASUREMENT_STATUS_BITS = 0x0003;
 
     static float convertToCelsius(const uint16_t value);
     bool writeCommand(const uint8_t command, uint8_t* data=NULL, const size_t len=0);
