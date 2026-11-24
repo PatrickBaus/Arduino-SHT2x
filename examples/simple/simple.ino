@@ -1,5 +1,5 @@
 #include <Wire.h>   // #include <i2c_t3.h> on the Teensy platform.
-#include "src/SHT2x.h"
+#include <SHT2x.h>
 
 SHT2x sensor(Wire);
 //HTU2x sensor(Wire);
