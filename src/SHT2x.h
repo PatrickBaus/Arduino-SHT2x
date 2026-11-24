@@ -81,11 +81,11 @@ class SHT2x {
     bool delayedRead(uint8_t* result, const size_t len, const uint16_t delayms);
     bool writeCommand(const uint16_t command, uint8_t* data=NULL, const size_t len=0);
     bool writeCommand(const uint8_t* cmd, const size_t cmdLen, uint8_t* data=NULL, const size_t len=0);
-    virtual bool readTempRaw(uint16_t &value, const bool holdMaster=false);
-    virtual bool readHumidityRaw(uint16_t &value, const bool holdMaster=false);
     bool readUserRegister(uint8_t& userRegister);
     bool writeUserRegister(const uint8_t userRegister);
 protected:
+    virtual bool readTempRaw(uint16_t &value, const bool holdMaster=false);
+    virtual bool readHumidityRaw(uint16_t &value, const bool holdMaster=false);
     static const uint8_t CMD_MEASURE_TEMPERATURE = 0xF3;
     static const uint8_t CMD_MEASURE_TEMPERATURE_HOLD_MASTER = 0xE3;
     static const uint8_t CMD_MEASURE_HUMIDITY = 0xF5;
@@ -105,6 +105,9 @@ class HTU2x: public SHT2x {
     #else
     HTU2x(TwoWire& i2cBus);
     #endif
+    // Keep the overloads of the base class visible, they are hidden by the overrides below
+    using SHT2x::readTempRaw;
+    using SHT2x::readHumidityRaw;
     bool readTempRaw(uint16_t &value, const bool holdMaster=false) override;
     bool readHumidityRaw(uint16_t &value, const bool holdMaster=false) override;
 };
@@ -116,6 +119,9 @@ class Si702x: public SHT2x {
     #else
     Si702x(TwoWire& i2cBus);
     #endif
+    // Keep the overloads of the base class visible, they are hidden by the overrides below
+    using SHT2x::readTempRaw;
+    using SHT2x::readHumidityRaw;
     uint8_t readFirmwareVersion(void);
     float fetchTemp(void);
     uint16_t fetchTempRaw(void);
