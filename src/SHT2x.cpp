@@ -52,7 +52,8 @@ bool SHT2x::writeCommand(const uint8_t* cmd, const size_t cmdLen, uint8_t* data,
   if (len) {
     result = result & (_pI2cBus->write(data, len) == len);
   }
-  _pI2cBus->endTransmission();
+  // endTransmission() returns a non-zero value if the device did not acknowledge or the bus failed
+  result = result & (_pI2cBus->endTransmission() == 0);
   return result;
 }
 
@@ -86,12 +87,16 @@ bool SHT2x::delayedRead(uint8_t* result, const size_t len, const uint16_t delaym
 }
 
 bool SHT2x::queryCommand(const uint8_t command, uint8_t* result, const size_t len, const uint16_t delayms) {
-  this->writeCommand(command);
+  if (!this->writeCommand(command)) {
+    return false;
+  }
   return delayedRead(result, len, delayms);
 }
 
 bool SHT2x::queryCommand(const uint16_t command, uint8_t* result, const size_t len, const uint16_t delayms) {
-  this->writeCommand(command);
+  if (!this->writeCommand(command)) {
+    return false;
+  }
   return delayedRead(result, len, delayms);
 }
 
