@@ -132,7 +132,7 @@ float SHT2x::readTemp(const bool holdMaster) {
   if (this->readTempRaw(value, holdMaster)) {
     return SHT2x::convertToCelsius(value);
   } else {
-    return nan("");
+    return NAN;
   }
 }
 
@@ -158,7 +158,7 @@ float SHT2x::readHumidity(const bool holdMaster) {
   if (this->readHumidityRaw(value, holdMaster)) {
     return SHT2x::convertToRh(value);
   } else {
-    return nan("");
+    return NAN;
   }
 }
 
@@ -344,7 +344,7 @@ float Si702x::fetchTemp(void) {
   if (this->fetchTempRaw(value)) {
     return SHT2x::convertToCelsius(value);
   } else {
-    return nan("");
+    return NAN;
   }
 }
 
