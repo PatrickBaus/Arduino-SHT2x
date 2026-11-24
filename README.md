@@ -1,6 +1,8 @@
 Sensirion SHT2x Arduino Library
 ===================
 
+[![CI](https://github.com/PatrickBaus/Arduino-SHT2x/actions/workflows/ci.yml/badge.svg)](https://github.com/PatrickBaus/Arduino-SHT2x/actions/workflows/ci.yml)
+
 Note: These devices are all NRD except for the TE parts.
 
 This repository contains an Arduino library for the following Sensirion devices:

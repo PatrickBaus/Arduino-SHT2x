@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Host tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install gcovr
+        run: pipx install gcovr
+
+      - name: Configure
+        run: cmake -S test -B build
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Check coverage (100 % lines and branches of src/)
+        run: |
+          mkdir -p coverage
+          gcovr --root . --filter src/ \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --txt --txt-metric branch \
+            --html-details coverage/index.html \
+            --xml coverage/coverage.xml \
+            --print-summary \
+            --fail-under-line 100 --fail-under-branch 100 \
+            build
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
+
+  lint:
+    name: Arduino Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The library is not registered in the Arduino library manager index, so
+      # the "update" checks do not apply. "strict" compliance is not possible
+      # without renaming the library (the name "SHT2x Library" contains a space
+      # and the word "library", rules LP015/LP016) and the extra/ folder
+      # (LS011), "specification" is the strictest level that passes.
+      - name: Lint
+        uses: arduino/arduino-lint-action@v2
+        with:
+          library-manager: false
+          compliance: specification
+
+  compile-examples:
+    name: Compile examples (${{ matrix.board.fqbn }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        board:
+          - fqbn: arduino:avr:uno
+            platforms: |
+              - name: arduino:avr
+          - fqbn: arduino:samd:mkrzero
+            platforms: |
+              - name: arduino:samd
+          - fqbn: esp32:esp32:esp32
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.board.fqbn }}
+          platforms: ${{ matrix.board.platforms }}
+          libraries: |
+            - source-path: ./
+          sketch-paths: |
+            - examples
+          enable-deltas-report: false
+          enable-warnings-report: false
