@@ -99,7 +99,7 @@ bool SHT2x::readSerial(SerialNumber& serial) {
   uint8_t data[8] = {0};
   // Read the first register
   this->queryCommand(SHT2x::CMD_READ_SERIAL_1, data, sizeof(data));
-  serial.b = data[0] << 24 | data[2] << 16 | data[4] << 8 | data[6] << 0;
+  serial.b = (uint32_t)data[0] << 24 | (uint32_t)data[2] << 16 | (uint32_t)data[4] << 8 | (uint32_t)data[6] << 0;
   // Test CRC
   bool result =
        SHT2x::crc8(&(data[0]), 1) == data[1]
@@ -110,8 +110,8 @@ bool SHT2x::readSerial(SerialNumber& serial) {
 
   // Read the second register (only 6 bytes)
   this->queryCommand(SHT2x::CMD_READ_SERIAL_2, data, 6);
-  serial.c = data[0] << 8 | data[1] << 0;
-  serial.b = data[3] << 8 | data[4] << 0;
+  serial.c = (uint16_t)data[0] << 8 | data[1] << 0;
+  serial.b = (uint16_t)data[3] << 8 | data[4] << 0;
   // Test CRC
   result =
        result
