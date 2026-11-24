@@ -22,7 +22,7 @@ Usage
 -----
 ```cpp
 #include <Wire.h>   // #include <i2c_t3.h> on the Teensy platform.
-#include "src/SHT2x.h"
+#include <SHT2x.h>
 
 SHT2x sensor(Wire);
 //HTU2x sensor(Wire);
@@ -37,7 +37,7 @@ void loop() {
   // The call to readTemp() will automatically block for the time the measurement takes to complete
   Serial.print(sensor.readTemp());  // Read the temperarture as a float in °C
   Serial.println(" °C");
-  Serial.print(sensor.readHumdity());  // Read the humidity as a float in %rH
+  Serial.print(sensor.readHumidity());  // Read the humidity as a float in %rH
   Serial.println(" %rH");
   delay(2000);
 }
@@ -45,8 +45,8 @@ void loop() {
 
 Installation
 -----
-Currently the library does not support the Arduino library manager, so it is highly recommended to copy the full library to a subfolder called
+The library is not (yet) available through the Arduino library manager. Either download the repository as a .zip file and install it
+via *Sketch -> Include Library -> Add .ZIP Library...* in the Arduino IDE or clone it into the `libraries` folder of your sketchbook:
 ```
-src/
+git clone https://github.com/PatrickBaus/Arduino-SHT2x.git
 ```
-within your Arduino project.
