@@ -14,6 +14,7 @@
 #ifndef SHT2x_H
 #define SHT2x_H
 
+#include <Arduino.h>   // delay(), NAN, size_t, NULL
 #include <stdint.h>
 #include <stdbool.h>
 
